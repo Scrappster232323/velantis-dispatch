@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velantis Group — Dispatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-dim: #8a6f2e;
+    --gold-glow: rgba(201,168,76,0.14);
+    --navy: #0a0e1a;
+    --navy-mid: #0f1628;
+    --navy-card: #111a2e;
+    --navy-border: rgba(201,168,76,0.2);
+    --navy-border-bright: rgba(201,168,76,0.5);
+    --text: #e8dfc8;
+    --text-muted: #8a8070;
+    --red: #e05555;
+    --green: #4caf7d;
+    --blue: #4c8acf;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 42% 8%,  rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 68% 35%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 12%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 90% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 88%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 72% 90%, rgba(255,255,255,0.25) 0%, transparent 100%);
+    pointer-events: none; z-index: 0;
+  }
+  header {
+    position: relative; z-index: 10;
+    text-align: center;
+    padding: 3.5rem 1rem 2rem;
+    border-bottom: 1px solid var(--navy-border);
+  }
+  .logo-shield { width: 58px; height: 68px; margin: 0 auto 1.2rem; display: block; }
+  .brand { font-family: 'Orbitron', monospace; font-size: 1.85rem; font-weight: 800; color: var(--gold); letter-spacing: 0.18em; text-transform: uppercase; }
+  .brand-sub { font-size: 0.68rem; letter-spacing: 0.35em; color: var(--text-muted); text-transform: uppercase; margin-top: 0.3rem; }
+  .slogan { font-size: 0.75rem; color: var(--gold-dim); letter-spacing: 0.2em; margin-top: 0.8rem; font-family: 'Orbitron', monospace; }
+  nav { position: relative; z-index: 10; display: flex; justify-content: center; border-bottom: 1px solid var(--navy-border); background: rgba(10,14,26,0.7); backdrop-filter: blur(8px); }
+  nav button { background: none; border: none; color: var(--text-muted); font-family: 'Orbitron', monospace; font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; padding: 1rem 1.8rem; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--gold); border-bottom-color: var(--gold); }
+  main { position: relative; z-index: 10; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .section-title { font-family: 'Orbitron', monospace; font-size: 1.05rem; font-weight: 600; color: var(--gold); letter-spacing: 0.12em; text-transform: uppercase; }
+  .section-desc { font-size: 0.84rem; color: var(--text-muted); margin-top: 0.4rem; line-height: 1.6; margin-bottom: 2.2rem; }
+  .service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+  .service-card { background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 6px; padding: 1.3rem 1.1rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; }
+  .service-card:hover { border-color: var(--navy-border-bright); }
+  .service-card.selected { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+  .service-card.selected::after { content: '✓'; position: absolute; top: 0.6rem; right: 0.8rem; color: var(--gold); font-size: 0.85rem; }
+  .service-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .service-name { font-family: 'Orbitron', monospace; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); margin-bottom: 0.3rem; }
+  .service-desc-txt { font-size: 0.73rem; color: var(--text-muted); line-height: 1.45; }
+  .emergency-card { background: rgba(224,85,85,0.07); border: 1px solid rgba(224,85,85,0.3); border-radius: 6px; padding: 1.3rem 1.1rem; cursor: pointer; transition: all 0.2s; position: relative; margin-bottom: 0.8rem; }
+  .emergency-card:hover { border-color: rgba(224,85,85,0.6); }
+  .emergency-card.selected { background: rgba(224,85,85,0.13); border-color: var(--red); }
+  .emergency-card.selected::after { content: '✓'; position: absolute; top: 0.6rem; right: 0.8rem; color: var(--red); }
+  .em-label { display: inline-block; background: rgba(224,85,85,0.18); color: var(--red); font-family: 'Orbitron', monospace; font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.18rem 0.5rem; border-radius: 3px; margin-bottom: 0.45rem; }
+  .form-group { margin-bottom: 1.4rem; }
+  label { display: block; font-family: 'Orbitron', monospace; font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 0.45rem; }
+  input, select, textarea { width: 100%; background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 4px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.87rem; padding: 0.72rem 1rem; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+  select option { background: #0f1628; }
+  textarea { resize: vertical; min-height: 78px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .urgency-row { display: flex; gap: 0.6rem; }
+  .urgency-btn { flex: 1; background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 4px; color: var(--text-muted); font-family: 'Orbitron', monospace; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.62rem 0.5rem; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .urgency-btn:hover { border-color: var(--gold); color: var(--text); }
+  .urgency-btn.u-low  { border-color: var(--green); color: var(--green); background: rgba(76,175,125,0.07); }
+  .urgency-btn.u-mid  { border-color: var(--gold);  color: var(--gold);  background: rgba(201,168,76,0.07); }
+  .urgency-btn.u-high { border-color: var(--red);   color: var(--red);   background: rgba(224,85,85,0.07); }
+  .divider { border: none; border-top: 1px solid var(--navy-border); margin: 1.8rem 0; }
+  .submit-btn { width: 100%; background: var(--gold); border: none; border-radius: 4px; color: #0a0e1a; font-family: 'Orbitron', monospace; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.95rem; cursor: pointer; transition: all 0.2s; margin-top: 0.8rem; }
+  .submit-btn:hover { background: #dfc060; }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: #2a2f3a; color: var(--text-muted); cursor: not-allowed; }
+  .submit-btn.em { background: var(--red); color: #fff; }
+  .submit-btn.em:hover { background: #f06464; }
+  .info-box { background: var(--navy-card); border: 1px solid var(--navy-border); border-radius: 6px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; }
+  .info-label { font-family: 'Orbitron', monospace; font-size: 0.58rem; letter-spacing: 0.12em; color: var(--gold-dim); text-transform: uppercase; margin-bottom: 0.35rem; }
+  .info-val { font-size: 0.86rem; color: var(--text); }
+  .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--green); margin-right: 0.4rem; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  #toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy-card); border: 1px solid var(--navy-border-bright); border-radius: 6px; padding: 0.9rem 1.8rem; font-family: 'Orbitron', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; white-space: nowrap; }
+  #toast.show { opacity: 1; }
+  #toast.err { color: var(--red); border-color: rgba(224,85,85,0.4); }
+  @media(max-width:560px){ .service-grid{grid-template-columns:1fr} .form-row{grid-template-columns:1fr} nav button{padding:.8rem .9rem;font-size:.52rem} .brand{font-size:1.3rem} }
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="logo-shield" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M30 2L5 14v22c0 15 10 27 25 32 15-5 25-17 25-32V14L30 2z" fill="#0f1628" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M30 8L10 18v18c0 12 8 21 20 26 12-5 20-14 20-26V18L30 8z" fill="none" stroke="#C9A84C" stroke-width="0.5" opacity="0.4"/>
+    <path d="M19 22l11 22 11-22" stroke="#C9A84C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <circle cx="30" cy="17" r="1" fill="#C9A84C" opacity="0.6"/>
+    <circle cx="24" cy="19" r="0.6" fill="#C9A84C" opacity="0.4"/>
+    <circle cx="36" cy="19" r="0.6" fill="#C9A84C" opacity="0.4"/>
+  </svg>
+  <div class="brand">Velantis Group</div>
+  <div class="brand-sub">Interstellar Transport &amp; Refueling Services</div>
+  <div class="slogan">"Your journey never ends."</div>
+</header>
+
+<nav>
+  <button class="active" onclick="showPage('dispatch',this)">Dispatch</button>
+  <button onclick="showPage('emergency',this)">Emergency</button>
+  <button onclick="showPage('status',this)">Status</button>
+</nav>
+
+<main>
+
+  <!-- DISPATCH -->
+  <div id="page-dispatch" class="page active">
+    <div class="section-title">Request a Service</div>
+    <div class="section-desc">Select your service and fill in your mission details. Our dispatch center will assign an available pilot.</div>
+
+    <div class="service-grid">
+      <div class="service-card" onclick="selectSvc(this,'Refueling — Quantum')">
+        <div class="service-icon">⛽</div>
+        <div class="service-name">Quantum Refuel</div>
+        <div class="service-desc-txt">Out of quantum fuel in deep space or transit</div>
+      </div>
+      <div class="service-card" onclick="selectSvc(this,'Refueling — Hydrogen')">
+        <div class="service-icon">🔋</div>
+        <div class="service-name">Hydrogen Refuel</div>
+        <div class="service-desc-txt">Standard hydrogen refueling at your location</div>
+      </div>
+      <div class="service-card" onclick="selectSvc(this,'Taxi / Shuttle')">
+        <div class="service-icon">🚀</div>
+        <div class="service-name">Taxi / Shuttle</div>
+        <div class="service-desc-txt">Transport between stations, cities or outposts</div>
+      </div>
+      <div class="service-card" onclick="selectSvc(this,'Deep Space Transport')">
+        <div class="service-icon">🌌</div>
+        <div class="service-name">Deep Space Run</div>
+        <div class="service-desc-txt">Long-range transport with optional escort</div>
+      </div>
+      <div class="service-card" onclick="selectSvc(this,'Fleet Support')">
+        <div class="service-icon">🛸</div>
+        <div class="service-name">Fleet Support</div>
+        <div class="service-desc-txt">Mobile supply &amp; logistics for larger groups</div>
+      </div>
+      <div class="service-card" onclick="selectSvc(this,'Convoy Escort')">
+        <div class="service-icon">🛡️</div>
+        <div class="service-name">Convoy Escort</div>
+        <div class="service-desc-txt">Security &amp; guidance through high-risk systems</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Urgency Level</label>
+      <div class="urgency-row">
+        <button class="urgency-btn u-low" onclick="setUrgency(this,'low')">Low</button>
+        <button class="urgency-btn" onclick="setUrgency(this,'mid')">Standard</button>
+        <button class="urgency-btn" onclick="setUrgency(this,'high')">High Priority</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>In-Game Handle</label>
+        <input type="text" id="d-handle" placeholder="YourHandle" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>Current System</label>
+        <select id="d-system">
+          <option value="">— Select System —</option>
+          <option>Stanton — Microtech</option>
+          <option>Stanton — Hurston</option>
+          <option>Stanton — ArcCorp</option>
+          <option>Stanton — Crusader</option>
+          <option>Stanton — Deep Space</option>
+          <option>Pyro</option>
+          <option>Other / Unknown</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Exact Location / Coordinates</label>
+      <input type="text" id="d-location" placeholder="z.B. Near Port Tressler, ~80km out — or paste coordinates">
+    </div>
+    <div class="form-group">
+      <label>Destination (if applicable)</label>
+      <input type="text" id="d-destination" placeholder="e.g. Lorville, Hurston — or leave blank">
+    </div>
+    <div class="form-group">
+      <label>Additional Notes</label>
+      <textarea id="d-notes" placeholder="Crew size, special requirements, threat level..."></textarea>
+    </div>
+
+    <button class="submit-btn" id="d-submit" onclick="submitDispatch()">Submit Dispatch Request →</button>
+  </div>
+
+  <!-- EMERGENCY -->
+  <div id="page-emergency" class="page">
+    <div class="section-title" style="color:var(--red)">⚠ Emergency Dispatch</div>
+    <div class="section-desc">Stranded or in immediate danger? Use this fast-track form. Pings the whole team.</div>
+
+    <div class="emergency-card" onclick="selectEm(this,'MAYDAY — Out of Fuel')">
+      <div class="em-label">Mayday</div>
+      <div class="service-name" style="color:var(--red)">Out of Fuel — Stranded</div>
+      <div class="service-desc-txt">No fuel remaining, cannot move.</div>
+    </div>
+    <div class="emergency-card" onclick="selectEm(this,'MAYDAY — Rescue Required')">
+      <div class="em-label">Rescue</div>
+      <div class="service-name" style="color:var(--red)">Crew Rescue / Evacuation</div>
+      <div class="service-desc-txt">Need immediate evacuation or crew pickup.</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>In-Game Handle</label>
+        <input type="text" id="e-handle" placeholder="YourHandle">
+      </div>
+      <div class="form-group">
+        <label>Current System</label>
+        <select id="e-system">
+          <option value="">— Select System —</option>
+          <option>Stanton — Microtech</option>
+          <option>Stanton — Hurston</option>
+          <option>Stanton — ArcCorp</option>
+          <option>Stanton — Crusader</option>
+          <option>Stanton — Deep Space</option>
+          <option>Pyro</option>
+          <option>Other / Unknown</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Exact Location</label>
+      <input type="text" id="e-location" placeholder="Be as specific as possible — coordinates, nearby POI...">
+    </div>
+    <div class="form-group">
+      <label>Status / Threats</label>
+      <textarea id="e-notes" placeholder="Hostile activity? Crew count? Ship state? Anything the pilot needs to know."></textarea>
+    </div>
+
+    <button class="submit-btn em" id="e-submit" onclick="submitEmergency()">🚨 Send Emergency Signal →</button>
+  </div>
+
+  <!-- STATUS -->
+  <div id="page-status" class="page">
+    <div class="section-title">Operational Status</div>
+    <div class="section-desc">Live overview of the Velantis Group dispatch network.</div>
+
+    <div class="info-box">
+      <div class="info-label">Dispatch Center</div>
+      <div class="info-val"><span class="status-dot"></span>Online — accepting requests</div>
+    </div>
+    <div class="info-box">
+      <div class="info-label">Coverage</div>
+      <div class="info-val">Stanton System · Pyro (limited availability)</div>
+    </div>
+    <div class="info-box">
+      <div class="info-label">Services</div>
+      <div class="info-val">Quantum Refuel · Hydrogen Refuel · Taxi · Deep Space · Fleet Support · Convoy Escort</div>
+    </div>
+    <div class="info-box">
+      <div class="info-label">Payment</div>
+      <div class="info-val">aUEC transfer · In-game Refueling mechanic</div>
+    </div>
+    <div class="info-box">
+      <div class="info-label">Slogan</div>
+      <div class="info-val" style="font-family:'Orbitron',monospace;font-size:0.75rem;color:var(--gold)">"Your journey never ends."</div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+// ── Config ── Edit BOT_URL to your bot's public address ─────────────────────
+const BOT_URL    = " https://finally-driller-garbage.ngrok-free.dev";   // e.g. http://123.45.67.89:8080
+const BOT_SECRET = "change_this_to_a_random_string"; // must match config.json
+// ────────────────────────────────────────────────────────────────────────────
+
+let selSvc = null, urgency = 'low', selEm = null;
+
+function showPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+function selectSvc(el, name) {
+  document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected'); selSvc = name;
+}
+
+function selectEm(el, name) {
+  document.querySelectorAll('.emergency-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected'); selEm = name;
+}
+
+function setUrgency(el, lvl) {
+  document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('u-low','u-mid','u-high'));
+  urgency = lvl; el.classList.add('u-' + lvl);
+}
+
+function toast(msg, isErr) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'show' + (isErr ? ' err' : '');
+  clearTimeout(window._t); window._t = setTimeout(() => el.className = '', 3600);
+}
+
+async function post(path, body) {
+  const r = await fetch(BOT_URL + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Velantis-Secret': BOT_SECRET },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(await r.text());
+}
+
+async function submitDispatch() {
+  const handle   = document.getElementById('d-handle').value.trim();
+  const system   = document.getElementById('d-system').value;
+  const location = document.getElementById('d-location').value.trim();
+  if (!handle)   { toast('Enter your in-game handle', true); return; }
+  if (!selSvc)   { toast('Select a service type', true); return; }
+  if (!system)   { toast('Select your system', true); return; }
+  if (!location) { toast('Enter your location', true); return; }
+
+  const btn = document.getElementById('d-submit');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    await post('/order', {
+      type: 'dispatch', handle, service: selSvc, urgency,
+      system, location,
+      destination: document.getElementById('d-destination').value.trim(),
+      notes: document.getElementById('d-notes').value.trim()
+    });
+    toast('Request dispatched — standby for assignment');
+    ['d-handle','d-location','d-destination','d-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('d-system').value = '';
+    document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+    selSvc = null;
+  } catch(e) {
+    toast('Could not reach dispatch — try again', true);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit Dispatch Request →';
+  }
+}
+
+async function submitEmergency() {
+  const handle   = document.getElementById('e-handle').value.trim();
+  const system   = document.getElementById('e-system').value;
+  const location = document.getElementById('e-location').value.trim();
+  if (!handle)   { toast('Enter your in-game handle', true); return; }
+  if (!selEm)    { toast('Select emergency type', true); return; }
+  if (!system)   { toast('Select your system', true); return; }
+  if (!location) { toast('Enter your location', true); return; }
+
+  const btn = document.getElementById('e-submit');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  try {
+    await post('/order', {
+      type: 'emergency', emergency_type: selEm,
+      handle, system, location,
+      notes: document.getElementById('e-notes').value.trim()
+    });
+    toast('Emergency signal sent — help is on the way');
+    ['e-handle','e-location','e-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('e-system').value = '';
+    document.querySelectorAll('.emergency-card').forEach(c => c.classList.remove('selected'));
+    selEm = null;
+  } catch(e) {
+    toast('Could not reach dispatch — try again', true);
+  } finally {
+    btn.disabled = false; btn.textContent = '🚨 Send Emergency Signal →';
+  }
+}
+</script>
+</body>
+</html>
