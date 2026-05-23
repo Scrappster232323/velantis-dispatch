@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velantis Group — Interstellar Commerce & Holding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN SYSTEM — Year 2956, Corporate Luxury
+   Aesthetic: Art-Deco meets deep-space noir
+   Fonts: Cormorant Garamond (display) + Rajdhani (UI) + Share Tech Mono (data)
+═══════════════════════════════════════════ */
+:root {
+  --gold:      #BFA06A;
+  --gold-hi:   #E8D08A;
+  --gold-lo:   #6B5A35;
+  --gold-glow: rgba(191,160,106,0.12);
+  --ink:       #04070F;
+  --ink-2:     #080E1C;
+  --ink-3:     #0C1428;
+  --ink-4:     #111D35;
+  --ink-5:     #162040;
+  --border:    rgba(191,160,106,0.16);
+  --border-hi: rgba(191,160,106,0.45);
+  --text:      #D8CEB8;
+  --text-2:    #8A8070;
+  --text-3:    #4A4538;
+  --red:       #C85050;
+  --red-lo:    rgba(200,80,80,0.1);
+  --green:     #4A9E72;
+  --mono:      'Share Tech Mono', monospace;
+  --display:   'Cormorant Garamond', serif;
+  --ui:        'Rajdhani', sans-serif;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: var(--ui);
+  font-weight: 400;
+  overflow-x: hidden;
+  cursor: default;
+}
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--ui); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--gold-lo); border-radius: 2px; }
+
+/* ══════════════════════════════════════════
+   ANIMATED BACKGROUND
+══════════════════════════════════════════ */
+#bg-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+
+/* Noise grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════
+   HEADER / NAV
+══════════════════════════════════════════ */
+#site-header {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 200;
+  padding: 0 3rem;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(4,7,15,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+#site-header.scrolled {
+  height: 54px;
+  background: rgba(4,7,15,0.96);
+}
+
+.header-logo {
+  display: flex; align-items: center; gap: 0.9rem;
+  cursor: pointer;
+}
+.header-logo svg { width: 34px; height: 40px; flex-shrink: 0; }
+.header-logo-text { display: flex; flex-direction: column; }
+.header-logo-name {
+  font-family: var(--display);
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--gold-hi);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  line-height: 1;
+}
+.header-logo-tag {
+  font-family: var(--mono);
+  font-size: 0.5rem; color: var(--text-2);
+  letter-spacing: 0.25em; margin-top: 2px;
+}
+
+.header-nav {
+  display: flex; gap: 0;
+  list-style: none;
+}
+.header-nav a {
+  font-family: var(--ui);
+  font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-2);
+  padding: 0.5rem 1.1rem;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s;
+  display: block;
+}
+.header-nav a:hover, .header-nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+.header-cta {
+  background: transparent;
+  border: 1px solid var(--border-hi);
+  color: var(--gold);
+  font-family: var(--ui);
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  padding: 0.55rem 1.2rem;
+  transition: all 0.2s;
+}
+.header-cta:hover { background: var(--gold-glow); border-color: var(--gold); }
+
+/* Mobile menu toggle */
+.menu-toggle { display: none; background: none; border: none; color: var(--gold); font-size: 1.3rem; }
+
+/* ══════════════════════════════════════════
+   PAGE SYSTEM
+══════════════════════════════════════════ */
+.page { display: none; min-height: 100vh; padding-top: 64px; }
+.page.active { display: block; }
+
+/* ══════════════════════════════════════════
+   SECTION PRIMITIVES
+══════════════════════════════════════════ */
+.section {
+  padding: 7rem 0;
+  position: relative;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 3rem;
+}
+.container-narrow { max-width: 720px; margin: 0 auto; padding: 0 3rem; }
+
+/* Section label */
+.s-label {
+  font-family: var(--mono);
+  font-size: 0.6rem; letter-spacing: 0.3em;
+  color: var(--gold-lo); text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+.s-label::before {
+  content: ''; display: block;
+  width: 24px; height: 1px;
+  background: var(--gold-lo);
+}
+
+/* Section title */
+.s-title {
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300; line-height: 1.1;
+  color: var(--gold-hi);
+  margin-bottom: 1.5rem;
+}
+.s-title em { font-style: italic; color: var(--text); }
+
+.s-body {
+  font-size: 1rem; line-height: 1.85;
+  color: var(--text-2); max-width: 580px;
+}
+
+/* Decorative line */
+.deco-line {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-lo), transparent);
+  margin: 4rem 0;
+}
+.deco-line-short {
+  width: 60px; height: 1px;
+  background: var(--gold);
+  margin: 1.2rem 0 2rem;
+}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+
+.hero-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(191,160,106,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(191,160,106,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black, transparent);
+}
+.hero-glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  background: radial-gradient(ellipse, rgba(191,160,106,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative; z-index: 2;
+  padding: 2rem 2rem;
+  animation: hero-in 1.2s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.62rem; letter-spacing: 0.35em;
+  color: var(--gold-lo); text-transform: uppercase;
+  margin-bottom: 2rem;
+  animation: hero-in 1s 0.1s both;
+}
+
+.hero-logo-svg {
+  width: 90px; height: 105px;
+  margin: 0 auto 2rem;
+  filter: drop-shadow(0 0 30px rgba(191,160,106,0.35));
+  animation: hero-in 1s 0.15s both, logo-float 6s ease-in-out infinite;
+}
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 300; line-height: 1.05;
+  color: var(--gold-hi);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.4rem;
+  animation: hero-in 1s 0.2s both;
+}
+.hero-title span {
+  display: block; font-style: italic;
+  font-size: 0.55em; color: var(--text-2);
+  letter-spacing: 0.18em; font-weight: 300;
+  margin-bottom: 0.2em;
+}
+
+.hero-sub {
+  font-family: var(--display);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-style: italic; font-weight: 300;
+  color: var(--text-2);
+  max-width: 540px; margin: 0 auto 3rem;
+  line-height: 1.7;
+  animation: hero-in 1s 0.3s both;
+}
+
+.hero-btns {
+  display: flex; gap: 1rem;
+  justify-content: center; flex-wrap: wrap;
+  animation: hero-in 1s 0.4s both;
+}
+.btn-gold {
+  background: var(--gold);
+  border: none; color: var(--ink);
+  font-family: var(--ui); font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.95rem 2.2rem;
+  transition: all 0.25s;
+  position: relative; overflow: hidden;
+}
+.btn-gold::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+}
+.btn-gold:hover { background: var(--gold-hi); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(191,160,106,0.3); }
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-hi); color: var(--gold);
+  font-family: var(--ui); font-size: 0.72rem;
+  font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.95rem 2.2rem;
+  transition: all 0.25s;
+}
+.btn-ghost:hover { background: var(--gold-glow); border-color: var(--gold); transform: translateY(-2px); }
+
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 0.52rem;
+  letter-spacing: 0.25em; color: var(--text-3);
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  animation: hero-in 1s 0.8s both;
+}
+.hero-scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(180deg, var(--gold-lo), transparent);
+  animation: scroll-line 2s ease-in-out infinite;
+}
+@keyframes scroll-line {
+  0%, 100% { opacity: 0.4; transform: scaleY(1); }
+  50%       { opacity: 1;   transform: scaleY(0.6); }
+}
+
+/* hero stats bar */
+.hero-stats {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  border-top: 1px solid var(--border);
+  background: rgba(4,7,15,0.7);
+  backdrop-filter: blur(10px);
+  display: flex; justify-content: center;
+  padding: 1.2rem 3rem;
+  gap: 4rem;
+}
+.hero-stat-item { text-align: center; }
+.hero-stat-val {
+  font-family: var(--display);
+  font-size: 1.6rem; font-weight: 600;
+  color: var(--gold); line-height: 1;
+}
+.hero-stat-label {
+  font-family: var(--mono);
+  font-size: 0.5rem; letter-spacing: 0.2em;
+  color: var(--text-3); text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+
+/* ══════════════════════════════════════════
+   TICKER BAND
+══════════════════════════════════════════ */
+.ticker-band {
+  background: var(--ink-3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0.7rem 0;
+  overflow: hidden;
+  position: relative;
+}
+.ticker-band::before, .ticker-band::after {
+  content: ''; position: absolute;
+  top: 0; bottom: 0; width: 80px; z-index: 2;
+  pointer-events: none;
+}
+.ticker-band::before { left: 0; background: linear-gradient(90deg, var(--ink-3), transparent); }
+.ticker-band::after  { right: 0; background: linear-gradient(-90deg, var(--ink-3), transparent); }
+.ticker-inner {
+  display: flex; width: max-content;
+  animation: ticker 30s linear infinite;
+}
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker-item {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0 2.5rem;
+  font-family: var(--mono); font-size: 0.58rem;
+  letter-spacing: 0.12em; color: var(--text-3);
+  white-space: nowrap;
+}
+.ticker-item::before { content: '◆'; color: var(--gold-lo); font-size: 0.4rem; }
+
+/* ══════════════════════════════════════════
+   WHO WE ARE
+══════════════════════════════════════════ */
+.who-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem; align-items: center;
+}
+.who-visual {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.who-hexgrid {
+  width: 100%; max-width: 380px;
+  aspect-ratio: 1;
+  position: relative;
+}
+.hex-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  animation: hex-rotate var(--dur,20s) linear infinite var(--dir,normal);
+}
+.hex-ring:nth-child(1) { inset: 0; --dur: 40s; }
+.hex-ring:nth-child(2) { inset: 15%; --dur: 25s; --dir: reverse; border-style: dashed; opacity: 0.5; }
+.hex-ring:nth-child(3) { inset: 30%; --dur: 18s; border-color: rgba(191,160,106,0.3); }
+@keyframes hex-rotate { to { transform: rotate(360deg); } }
+.hex-center {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 36%;
+}
+.hex-dot {
+  position: absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%; background: var(--gold);
+  top: 50%; left: 50%;
+  transform-origin: 0 0;
+  box-shadow: 0 0 8px var(--gold);
+}
+
+.who-text .s-body { margin-bottom: 1.5rem; }
+
+.fact-row {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+.fact-val {
+  font-family: var(--display);
+  font-size: 2rem; font-weight: 600; color: var(--gold);
+  line-height: 1;
+}
+.fact-label {
+  font-family: var(--mono);
+  font-size: 0.52rem; letter-spacing: 0.15em;
+  color: var(--text-3); text-transform: uppercase;
+  margin-top: 0.3rem; line-height: 1.5;
+}
+
+/* ══════════════════════════════════════════
+   SERVICES GRID
+══════════════════════════════════════════ */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.svc-tile {
+  background: var(--ink-2);
+  padding: 2.5rem 2rem;
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.svc-tile::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.svc-tile:hover { background: var(--ink-3); }
+.svc-tile:hover::before { opacity: 1; }
+.svc-num {
+  font-family: var(--mono);
+  font-size: 0.55rem; color: var(--text-3);
+  letter-spacing: 0.2em; margin-bottom: 1.5rem;
+}
+.svc-icon-wrap {
+  font-size: 2rem; margin-bottom: 1rem;
+  filter: grayscale(0.3);
+  transition: filter 0.3s;
+}
+.svc-tile:hover .svc-icon-wrap { filter: none; }
+.svc-name {
+  font-family: var(--display);
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--gold-hi); margin-bottom: 0.6rem;
+  line-height: 1.2;
+}
+.svc-desc {
+  font-size: 0.82rem; color: var(--text-2);
+  line-height: 1.7;
+}
+.svc-tag {
+  display: inline-block; margin-top: 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.5rem; letter-spacing: 0.15em;
+  color: var(--gold-lo); text-transform: uppercase;
+  border: 1px solid var(--border); padding: 0.2rem 0.5rem;
+}
+
+/* ══════════════════════════════════════════
+   THE CLUB
+══════════════════════════════════════════ */
+.club-section {
+  background: var(--ink-3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.club-section::before {
+  content: 'VLCC';
+  position: absolute; right: -2rem; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--display);
+  font-size: 18rem; font-weight: 700;
+  color: rgba(191,160,106,0.03);
+  line-height: 1; pointer-events: none;
+  letter-spacing: -0.05em;
+}
+.club-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 5rem; align-items: center; }
+.club-badge {
+  display: flex; align-items: center; justify-content: center;
+}
+.club-badge-inner {
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  border: 1px solid var(--border-hi);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  background: radial-gradient(ellipse, rgba(191,160,106,0.06) 0%, transparent 70%);
+}
+.club-badge-inner::before {
+  content: '';
+  position: absolute; inset: 10px;
+  border-radius: 50%;
+  border: 1px dashed rgba(191,160,106,0.2);
+  animation: hex-rotate 20s linear infinite;
+}
+.club-badge-icon { font-size: 4rem; z-index: 1; }
+
+.club-perks {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1rem; margin-top: 2.5rem;
+}
+.perk {
+  padding: 1rem 1.2rem;
+  border: 1px solid var(--border);
+  background: var(--ink-2);
+  transition: border-color 0.2s;
+}
+.perk:hover { border-color: var(--border-hi); }
+.perk-icon { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.perk-name {
+  font-family: var(--ui); font-size: 0.78rem;
+  font-weight: 600; letter-spacing: 0.08em;
+  color: var(--gold-hi); margin-bottom: 0.2rem;
+}
+.perk-txt { font-size: 0.74rem; color: var(--text-2); line-height: 1.5; }
+
+/* ══════════════════════════════════════════
+   HOW TO JOIN
+══════════════════════════════════════════ */
+.join-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; position: relative;
+}
+.join-steps::before {
+  content: '';
+  position: absolute; top: 2.2rem; left: 12.5%; right: 12.5%;
+  height: 1px; background: var(--border);
+}
+.join-step { text-align: center; padding: 0 1rem; position: relative; }
+.step-num {
+  width: 44px; height: 44px;
+  border: 1px solid var(--border-hi);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-family: var(--mono); font-size: 0.75rem;
+  color: var(--gold); background: var(--ink-2);
+  position: relative; z-index: 1;
+}
+.step-title {
+  font-family: var(--display);
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--gold-hi); margin-bottom: 0.5rem;
+}
+.step-txt { font-size: 0.78rem; color: var(--text-2); line-height: 1.6; }
+.step-link {
+  display: inline-block; margin-top: 0.8rem;
+  font-family: var(--mono); font-size: 0.56rem;
+  letter-spacing: 0.12em; color: var(--gold-lo);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.step-link:hover { color: var(--gold); border-color: var(--gold); }
+
+/* ══════════════════════════════════════════
+   WHY JOIN — REASON CARDS
+══════════════════════════════════════════ */
+.reasons-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+.reason-card {
+  padding: 2rem 1.8rem;
+  border: 1px solid var(--border);
+  background: var(--ink-2);
+  position: relative; overflow: hidden;
+  transition: all 0.25s;
+}
+.reason-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 0;
+  background: var(--gold);
+  transition: height 0.3s;
+}
+.reason-card:hover { border-color: var(--border-hi); background: var(--ink-3); }
+.reason-card:hover::after { height: 100%; }
+.reason-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+.reason-title {
+  font-family: var(--display);
+  font-size: 1.15rem; font-weight: 600;
+  color: var(--gold-hi); margin-bottom: 0.6rem;
+}
+.reason-txt { font-size: 0.82rem; color: var(--text-2); line-height: 1.7; }
+
+/* ══════════════════════════════════════════
+   REVIEWS / TESTIMONIALS
+══════════════════════════════════════════ */
+.reviews-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.review-card {
+  background: var(--ink-2);
+  border: 1px solid var(--border);
+  padding: 2rem 1.8rem;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.review-card:hover { border-color: var(--border-hi); }
+.review-stars {
+  color: var(--gold); font-size: 0.7rem;
+  letter-spacing: 0.1em; margin-bottom: 1rem;
+}
+.review-text {
+  font-family: var(--display);
+  font-size: 0.95rem; font-style: italic;
+  font-weight: 300; color: var(--text);
+  line-height: 1.7; margin-bottom: 1.5rem;
+}
+.review-author {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--border);
+}
+.review-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--ink-4);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; flex-shrink: 0;
+}
+.review-name {
+  font-family: var(--ui); font-size: 0.75rem;
+  font-weight: 600; color: var(--text);
+  letter-spacing: 0.05em;
+}
+.review-role {
+  font-family: var(--mono); font-size: 0.52rem;
+  color: var(--text-3); letter-spacing: 0.12em;
+}
+
+/* ══════════════════════════════════════════
+   DISPATCH SECTION
+══════════════════════════════════════════ */
+.dispatch-hero {
+  background: var(--ink-3);
+  border: 1px solid var(--border);
+  padding: 4rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: center;
+  position: relative; overflow: hidden;
+}
+.dispatch-hero::before {
+  content: '';
+  position: absolute; right: -50px; top: -50px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(191,160,106,0.06), transparent 70%);
+  pointer-events: none;
+}
+.dispatch-features {
+  display: flex; flex-direction: column; gap: 1.2rem;
+}
+.df-item {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1rem;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+.df-item:hover { border-color: var(--border); }
+.df-icon {
+  font-size: 1.2rem; flex-shrink: 0;
+  width: 36px; text-align: center;
+}
+.df-title {
+  font-family: var(--ui); font-size: 0.82rem;
+  font-weight: 600; color: var(--gold-hi);
+  letter-spacing: 0.05em; margin-bottom: 0.25rem;
+}
+.df-txt { font-size: 0.76rem; color: var(--text-2); line-height: 1.6; }
+
+/* ══════════════════════════════════════════
+   LINKS / ORG PAGES
+══════════════════════════════════════════ */
+.links-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.link-card {
+  background: var(--ink-2);
+  border: 1px solid var(--border);
+  padding: 2.2rem 2rem;
+  display: flex; flex-direction: column;
+  transition: all 0.25s;
+  position: relative; overflow: hidden;
+  cursor: pointer;
+}
+.link-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.25s;
+}
+.link-card:hover { border-color: var(--border-hi); background: var(--ink-3); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.link-card:hover::before { opacity: 1; }
+.link-icon { font-size: 1.8rem; margin-bottom: 1.2rem; }
+.link-platform {
+  font-family: var(--mono); font-size: 0.52rem;
+  letter-spacing: 0.2em; color: var(--gold-lo);
+  text-transform: uppercase; margin-bottom: 0.4rem;
+}
+.link-name {
+  font-family: var(--display);
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--gold-hi); margin-bottom: 0.6rem;
+  line-height: 1.2;
+}
+.link-desc { font-size: 0.78rem; color: var(--text-2); line-height: 1.6; flex: 1; }
+.link-arrow {
+  margin-top: 1.5rem;
+  font-family: var(--mono); font-size: 0.58rem;
+  color: var(--gold-lo); letter-spacing: 0.1em;
+  display: flex; align-items: center; gap: 0.4rem;
+  transition: color 0.2s, gap 0.2s;
+}
+.link-card:hover .link-arrow { color: var(--gold); gap: 0.7rem; }
+
+/* ══════════════════════════════════════════
+   DISPATCH PAGE (functional)
+══════════════════════════════════════════ */
+.dispatch-page-inner {
+  max-width: 860px; margin: 0 auto; padding: 3rem 2rem 6rem;
+}
+.service-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border);
+  border: 1px solid var(--border); margin-bottom: 2rem;
+}
+.svc-pick {
+  background: var(--ink-2);
+  padding: 1.5rem 1.2rem;
+  cursor: pointer; position: relative;
+  transition: background 0.2s;
+  user-select: none;
+}
+.svc-pick:hover { background: var(--ink-3); }
+.svc-pick.sel { background: rgba(191,160,106,0.08); }
+.svc-pick .ck {
+  position: absolute; top: 0.6rem; right: 0.7rem;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; color: transparent;
+  transition: all 0.2s;
+}
+.svc-pick.sel .ck { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+.svc-pick-icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+.svc-pick-name {
+  font-family: var(--display);
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--gold-hi); margin-bottom: 0.2rem;
+}
+.svc-pick-desc { font-size: 0.7rem; color: var(--text-2); line-height: 1.4; }
+
+.form-group { margin-bottom: 1.4rem; }
+.field-label {
+  display: block;
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold-lo); margin-bottom: 0.45rem;
+}
+input, select, textarea {
+  width: 100%; background: var(--ink-3);
+  border: 1px solid var(--border); color: var(--text);
+  font-family: var(--ui); font-size: 0.9rem;
+  padding: 0.75rem 1rem; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(191,160,106,0.07);
+}
+select option { background: var(--ink-2); }
+textarea { resize: vertical; min-height: 80px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.urgency-row { display: flex; gap: 0.5rem; }
+.urg-btn {
+  flex: 1; background: var(--ink-3);
+  border: 1px solid var(--border); color: var(--text-2);
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.65rem; text-align: center;
+  cursor: pointer; transition: all 0.2s;
+}
+.urg-btn:hover { border-color: var(--gold); color: var(--text); }
+.urg-btn.u-low  { border-color: var(--green); color: var(--green); background: rgba(74,158,114,0.07); }
+.urg-btn.u-mid  { border-color: var(--gold);  color: var(--gold);  background: rgba(191,160,106,0.07); }
+.urg-btn.u-high { border-color: var(--red);   color: var(--red);   background: var(--red-lo); }
+
+hr.rule { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+.submit-btn {
+  width: 100%; background: var(--gold);
+  border: none; color: var(--ink);
+  font-family: var(--ui); font-size: 0.72rem;
+  font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 1.1rem; margin-top: 1rem;
+  transition: all 0.25s; position: relative; overflow: hidden;
+}
+.submit-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%); }
+.submit-btn:hover { background: var(--gold-hi); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(191,160,106,0.3); }
+.submit-btn:disabled { background: var(--ink-4); color: var(--text-3); cursor: not-allowed; transform: none; box-shadow: none; }
+.submit-btn.em { background: var(--red); color: #fff; }
+.submit-btn.em:hover { background: #d96060; box-shadow: 0 6px 24px rgba(200,80,80,0.3); }
+
+/* em cards */
+.em-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+.em-card { background: rgba(200,80,80,0.06); padding: 1.5rem 1.2rem; cursor: pointer; position: relative; transition: background 0.2s; user-select: none; }
+.em-card:hover { background: rgba(200,80,80,0.1); }
+.em-card.sel { background: rgba(200,80,80,0.14); }
+.em-card .ck { position: absolute; top: 0.6rem; right: 0.7rem; width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(200,80,80,0.3); display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: transparent; transition: all 0.2s; }
+.em-card.sel .ck { background: var(--red); border-color: var(--red); color: #fff; }
+.em-badge { display: inline-block; background: rgba(200,80,80,0.2); color: var(--red); font-family: var(--mono); font-size: 0.5rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 0.15rem 0.4rem; margin-bottom: 0.4rem; }
+.em-title { font-family: var(--display); font-size: 0.95rem; font-weight: 600; color: var(--red); margin-bottom: 0.2rem; }
+.em-txt { font-size: 0.7rem; color: var(--text-2); line-height: 1.4; }
+
+/* ══════════════════════════════════════════
+   STATUS PAGE
+══════════════════════════════════════════ */
+.status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.status-card { background: var(--ink-2); border: 1px solid var(--border); padding: 1.5rem; transition: border-color 0.2s; }
+.status-card:hover { border-color: var(--border-hi); }
+.status-card-label { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.16em; color: var(--gold-lo); text-transform: uppercase; margin-bottom: 0.5rem; }
+.status-card-val { font-size: 0.9rem; color: var(--text); }
+.sdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 0.45rem; vertical-align: middle; }
+.sdot.on  { background: var(--green); animation: sdot-pulse 2s infinite; }
+.sdot.off { background: var(--red); }
+.sdot.chk { background: var(--gold); animation: sdot-pulse 1s infinite; }
+@keyframes sdot-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ══════════════════════════════════════════
+   CONFIRM OVERLAY
+══════════════════════════════════════════ */
+#confirm-ov {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(4,7,15,0.94);
+  backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.35s;
+}
+#confirm-ov.show { opacity: 1; pointer-events: all; }
+.confirm-box {
+  background: var(--ink-3);
+  border: 1px solid var(--border-hi);
+  padding: 3.5rem 3rem;
+  text-align: center; max-width: 440px; width: 90%;
+  transform: translateY(20px);
+  transition: transform 0.35s;
+  position: relative; overflow: hidden;
+}
+#confirm-ov.show .confirm-box { transform: translateY(0); }
+.confirm-box::before { content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.confirm-icon { font-size: 2.5rem; margin-bottom: 1.2rem; display: block; }
+.confirm-title { font-family: var(--display); font-size: 1.5rem; font-weight: 600; color: var(--gold-hi); margin-bottom: 0.8rem; }
+.confirm-text { font-size: 0.84rem; color: var(--text-2); line-height: 1.7; margin-bottom: 1.5rem; }
+.confirm-ref { font-family: var(--mono); font-size: 0.6rem; color: var(--text-3); letter-spacing: 0.1em; margin-bottom: 2rem; }
+.confirm-close { background: none; border: 1px solid var(--border-hi); color: var(--gold); font-family: var(--ui); font-size: 0.65rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.7rem 1.8rem; cursor: pointer; transition: all 0.2s; }
+.confirm-close:hover { background: var(--gold-glow); }
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+#toast {
+  position: fixed; bottom: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--ink-3); border: 1px solid var(--border-hi);
+  padding: 0.85rem 2rem; z-index: 999;
+  font-family: var(--mono); font-size: 0.6rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold);
+  opacity: 0; pointer-events: none; transition: all 0.3s; white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast.err { color: var(--red); border-color: rgba(200,80,80,0.4); }
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer {
+  background: var(--ink-2);
+  border-top: 1px solid var(--border);
+  padding: 4rem 3rem 2rem;
+  position: relative; z-index: 10;
+}
+.footer-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem; margin-bottom: 3rem;
+}
+.footer-brand-name {
+  font-family: var(--display);
+  font-size: 1.2rem; font-weight: 600;
+  color: var(--gold-hi); letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.footer-brand-tag {
+  font-family: var(--mono); font-size: 0.52rem;
+  color: var(--text-3); letter-spacing: 0.2em;
+  margin-bottom: 1rem;
+}
+.footer-brand-txt { font-size: 0.78rem; color: var(--text-2); line-height: 1.7; }
+
+.footer-col-title {
+  font-family: var(--mono); font-size: 0.55rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold-lo); margin-bottom: 1.2rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+.footer-links a {
+  font-size: 0.8rem; color: var(--text-2);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--gold); }
+
+.footer-bottom {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 2rem; border-top: 1px solid var(--border);
+  font-family: var(--mono); font-size: 0.52rem;
+  color: var(--text-3); letter-spacing: 0.1em;
+}
+
+/* ══════════════════════════════════════════
+   MOBILE
+══════════════════════════════════════════ */
+@media(max-width: 900px) {
+  .who-grid, .club-grid, .dispatch-hero { grid-template-columns: 1fr; gap: 3rem; }
+  .who-visual { display: none; }
+  .services-grid, .reviews-grid, .links-grid { grid-template-columns: 1fr 1fr; }
+  .join-steps { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .join-steps::before { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .reasons-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 2rem; flex-wrap: wrap; }
+}
+@media(max-width: 620px) {
+  .services-grid, .reviews-grid, .links-grid, .service-grid, .em-grid, .status-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .header-nav { display: none; }
+  .menu-toggle { display: block; }
+  .container, .container-narrow { padding: 0 1.2rem; }
+  .dispatch-hero { padding: 2rem 1.5rem; }
+  .hero-stats { padding: 1rem; gap: 1.5rem; }
+  .join-steps { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .club-perks { grid-template-columns: 1fr; }
+  .fact-row { grid-template-columns: 1fr; gap: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     CANVAS BACKGROUND
+══════════════════════════════════════ -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ═══════════════════════════════════
+     CONFIRM OVERLAY
+══════════════════════════════════════ -->
+<div id="confirm-ov">
+  <div class="confirm-box">
+    <span class="confirm-icon" id="ci">📡</span>
+    <div class="confirm-title" id="ct">Dispatch Confirmed</div>
+    <div class="confirm-text" id="cx">Your request has been received by our dispatch center. A pilot will be assigned shortly.</div>
+    <div class="confirm-ref" id="cr"></div>
+    <button class="confirm-close" onclick="closeConfirm()">Close ×</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<header id="site-header">
+  <div class="header-logo" onclick="navTo('home')">
+    <svg viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#E8D08A"/>
+          <stop offset="100%" stop-color="#6B5A35"/>
+        </linearGradient>
+      </defs>
+      <path d="M30 2L5 14v22c0 15 10 27 25 32 15-5 25-17 25-32V14L30 2z" fill="#080E1C" stroke="url(#lg1)" stroke-width="1.5"/>
+      <path d="M30 8L10 18v18c0 12 8 21 20 26 12-5 20-14 20-26V18L30 8z" fill="none" stroke="#BFA06A" stroke-width="0.5" opacity="0.3"/>
+      <path d="M19 22l11 22 11-22" stroke="url(#lg1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <circle cx="30" cy="17" r="1.2" fill="#BFA06A" opacity="0.8"/>
+    </svg>
+    <div class="header-logo-text">
+      <div class="header-logo-name">Velantis Group</div>
+      <div class="header-logo-tag">Interstellar Commerce &amp; Holding · Est. 2951</div>
+    </div>
+  </div>
+
+  <nav>
+    <ul class="header-nav">
+      <li><a href="#" onclick="navTo('home')" id="nav-home" class="active">Home</a></li>
+      <li><a href="#" onclick="navTo('about')">About</a></li>
+      <li><a href="#" onclick="navTo('club')">The Club</a></li>
+      <li><a href="#" onclick="navTo('join')">Join</a></li>
+      <li><a href="#" onclick="navTo('dispatch-page')">Dispatch</a></li>
+      <li><a href="#" onclick="navTo('status')">Status</a></li>
+    </ul>
+  </nav>
+
+  <button class="header-cta" onclick="navTo('dispatch-page')">Request Service</button>
+  <button class="menu-toggle" onclick="toggleMobile()">☰</button>
+</header>
+
+<!-- Mobile nav -->
+<div id="mobile-nav" style="display:none;position:fixed;top:64px;left:0;right:0;z-index:199;background:rgba(4,7,15,0.97);border-bottom:1px solid var(--border);padding:1rem 2rem;">
+  <div style="display:flex;flex-direction:column;gap:0.2rem;">
+    <a href="#" onclick="navTo('home');toggleMobile()" style="padding:0.7rem;font-family:var(--ui);font-size:0.82rem;letter-spacing:0.1em;color:var(--text-2)">Home</a>
+    <a href="#" onclick="navTo('about');toggleMobile()" style="padding:0.7rem;font-family:var(--ui);font-size:0.82rem;letter-spacing:0.1em;color:var(--text-2)">About</a>
+    <a href="#" onclick="navTo('club');toggleMobile()" style="padding:0.7rem;font-family:var(--ui);font-size:0.82rem;letter-spacing:0.1em;color:var(--text-2)">The Club</a>
+    <a href="#" onclick="navTo('join');toggleMobile()" style="padding:0.7rem;font-family:var(--ui);font-size:0.82rem;letter-spacing:0.1em;color:var(--text-2)">Join</a>
+    <a href="#" onclick="navTo('dispatch-page');toggleMobile()" style="padding:0.7rem;font-family:var(--ui);font-size:0.82rem;letter-spacing:0.1em;color:var(--text-2)">Dispatch</a>
+    <a href="#" onclick="navTo('status');toggleMobile()" style="padding:0.7rem;font-family:var(--ui);font-size:0.82rem;letter-spacing:0.1em;color:var(--text-2)">Status</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-glow"></div>
+
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Velantis Interstellar Commerce &amp; Holding Group · [VELANTIS]</div>
+
+      <svg class="hero-logo-svg" viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="hlg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E8D08A"/>
+            <stop offset="100%" stop-color="#6B5A35"/>
+          </linearGradient>
+        </defs>
+        <path d="M30 2L5 14v22c0 15 10 27 25 32 15-5 25-17 25-32V14L30 2z" fill="#080E1C" stroke="url(#hlg)" stroke-width="1.5"/>
+        <path d="M30 7L9 17v19c0 13 8 22 21 27 13-5 21-14 21-27V17L30 7z" fill="none" stroke="#BFA06A" stroke-width="0.5" opacity="0.25"/>
+        <path d="M19 22l11 22 11-22" stroke="url(#hlg)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="30" cy="17" r="1.5" fill="#BFA06A"/>
+        <circle cx="23" cy="20" r="0.8" fill="#BFA06A" opacity="0.5"/>
+        <circle cx="37" cy="20" r="0.8" fill="#BFA06A" opacity="0.5"/>
+        <line x1="15" y1="22" x2="45" y2="22" stroke="#BFA06A" stroke-width="0.4" opacity="0.3"/>
+        <line x1="13" y1="33" x2="47" y2="33" stroke="#BFA06A" stroke-width="0.4" opacity="0.2"/>
+      </svg>
+
+      <h1 class="hero-title">
+        <span>Velantis Group</span>
+        Commerce. Logistics. Prestige.
+      </h1>
+      <p class="hero-sub">Behind every major trade route, there is one name. Across Stanton, Nyx, and Pyro — we keep the 'verse moving.</p>
+
+      <div class="hero-btns">
+        <button class="btn-gold" onclick="navTo('dispatch-page')">Request Service</button>
+        <button class="btn-ghost" onclick="navTo('about')">Who We Are</button>
+        <button class="btn-ghost" onclick="navTo('club')">The Club ◆</button>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <div class="hero-stat-val">3</div>
+        <div class="hero-stat-label">Star Systems</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-val">8+</div>
+        <div class="hero-stat-label">Service Types</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-val">24/7</div>
+        <div class="hero-stat-label">Emergency Response</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-val">2951</div>
+        <div class="hero-stat-label">Est. Standard Year</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ticker -->
+  <div class="ticker-band">
+    <div class="ticker-inner">
+      <div class="ticker-item">Stanton System — Operational</div>
+      <div class="ticker-item">Nyx System — Operational</div>
+      <div class="ticker-item">Pyro System — Limited Availability</div>
+      <div class="ticker-item">Quantum Refuel — Available</div>
+      <div class="ticker-item">Hydrogen Refuel — Available</div>
+      <div class="ticker-item">Taxi & Shuttle — Available</div>
+      <div class="ticker-item">VIP Transport — Available</div>
+      <div class="ticker-item">Fleet Support — On Request</div>
+      <div class="ticker-item">Convoy Escort — On Request</div>
+      <div class="ticker-item">Emergency Response — 24/7</div>
+      <!-- duplicate for seamless loop -->
+      <div class="ticker-item">Stanton System — Operational</div>
+      <div class="ticker-item">Nyx System — Operational</div>
+      <div class="ticker-item">Pyro System — Limited Availability</div>
+      <div class="ticker-item">Quantum Refuel — Available</div>
+      <div class="ticker-item">Hydrogen Refuel — Available</div>
+      <div class="ticker-item">Taxi & Shuttle — Available</div>
+      <div class="ticker-item">VIP Transport — Available</div>
+      <div class="ticker-item">Fleet Support — On Request</div>
+      <div class="ticker-item">Convoy Escort — On Request</div>
+      <div class="ticker-item">Emergency Response — 24/7</div>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <section class="section">
+    <div class="container">
+      <div class="s-label">What we do</div>
+      <h2 class="s-title">Full-Spectrum <em>Interstellar Services</em></h2>
+      <div class="deco-line-short"></div>
+
+      <div class="services-grid">
+        <div class="svc-tile">
+          <div class="svc-num">01</div>
+          <div class="svc-icon-wrap">⛽</div>
+          <div class="svc-name">Quantum Refueling</div>
+          <div class="svc-desc">Deep-space quantum fuel transfer. Never strand mid-jump again. Available across all three covered systems.</div>
+          <div class="svc-tag">Core Service</div>
+        </div>
+        <div class="svc-tile">
+          <div class="svc-num">02</div>
+          <div class="svc-icon-wrap">🔋</div>
+          <div class="svc-name">Hydrogen Refuel</div>
+          <div class="svc-desc">Standard hydrogen refueling wherever you are — in orbit, at an outpost, or drifting in the black.</div>
+          <div class="svc-tag">Core Service</div>
+        </div>
+        <div class="svc-tile">
+          <div class="svc-num">03</div>
+          <div class="svc-icon-wrap">🚀</div>
+          <div class="svc-name">Taxi & Shuttle</div>
+          <div class="svc-desc">Personal and group transport between any location. Standard, VIP, and evacuation tiers available.</div>
+          <div class="svc-tag">Transport</div>
+        </div>
+        <div class="svc-tile">
+          <div class="svc-num">04</div>
+          <div class="svc-icon-wrap">🌌</div>
+          <div class="svc-name">Deep Space Runs</div>
+          <div class="svc-desc">Long-haul transport for researchers, traders, and expeditions — with optional mid-route refueling and escort.</div>
+          <div class="svc-tag">Transport</div>
+        </div>
+        <div class="svc-tile">
+          <div class="svc-num">05</div>
+          <div class="svc-icon-wrap">🛸</div>
+          <div class="svc-name">Fleet Support</div>
+          <div class="svc-desc">Mobile supply and logistics coordination for organizations and large player operations.</div>
+          <div class="svc-tag">Logistics</div>
+        </div>
+        <div class="svc-tile">
+          <div class="svc-num">06</div>
+          <div class="svc-icon-wrap">🛡️</div>
+          <div class="svc-name">Convoy Escort</div>
+          <div class="svc-desc">Security contractors for high-risk routes through Pyro and contested corridors. No convoy left unprotected.</div>
+          <div class="svc-tag">Security</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section" style="background:var(--ink-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="s-label">Testimonials</div>
+      <h2 class="s-title">What Pilots <em>Say About Us</em></h2>
+      <div class="deco-line-short"></div>
+
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Stranded 200km from Port Tressler with zero quantum. Velantis had a tanker on me in under 15 minutes. Absolutely professional operation."</div>
+          <div class="review-author">
+            <div class="review-avatar">🧑‍🚀</div>
+            <div>
+              <div class="review-name">Cmdr. Harkon_VII</div>
+              <div class="review-role">Independent Trader · Stanton</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <div class="review-text">"Needed a full fleet refuel before our Pyro run. Velantis dispatched two Starfarers and had us topped up in time. No chaos, no delays."</div>
+          <div class="review-author">
+            <div class="review-avatar">⚔️</div>
+            <div>
+              <div class="review-name">Director Nox_Falcyn</div>
+              <div class="review-role">Fleet Commander · [REDACTED]</div>
+            </div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★☆</div>
+          <div class="review-text">"Used the VIP transport for our org leadership meeting on Orison. Punctual, discreet, and the pilot knew exactly what they were doing."</div>
+          <div class="review-author">
+            <div class="review-avatar">🌟</div>
+            <div>
+              <div class="review-name">Alys_Morven</div>
+              <div class="review-role">CEO · Morven Holdings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dispatch preview -->
+  <section class="section">
+    <div class="container">
+      <div class="s-label">Dispatch System</div>
+      <h2 class="s-title">Request Help. <em>Instantly.</em></h2>
+      <div class="deco-line-short"></div>
+
+      <div class="dispatch-hero">
+        <div>
+          <p class="s-body" style="margin-bottom:2rem;">Our dispatch system connects you directly with available Velantis pilots. Submit a request from anywhere — the team gets notified on Discord instantly.</p>
+          <button class="btn-gold" onclick="navTo('dispatch-page')">Open Dispatch →</button>
+          <button class="btn-ghost" style="margin-left:1rem;" onclick="navTo('dispatch-page')">🚨 Emergency</button>
+        </div>
+        <div class="dispatch-features">
+          <div class="df-item">
+            <div class="df-icon">📡</div>
+            <div><div class="df-title">Instant Discord Alert</div><div class="df-txt">Every request pings our pilots in real-time. Claim buttons built right into the Discord embed.</div></div>
+          </div>
+          <div class="df-item">
+            <div class="df-icon">🔢</div>
+            <div><div class="df-title">Reference Tracking</div><div class="df-txt">Every dispatch gets a unique reference code for follow-up and accountability.</div></div>
+          </div>
+          <div class="df-item">
+            <div class="df-icon">🚨</div>
+            <div><div class="df-title">Emergency Fast-Track</div><div class="df-txt">Mayday signals @here the entire team immediately. No queue, no delay.</div></div>
+          </div>
+          <div class="df-item">
+            <div class="df-icon">💳</div>
+            <div><div class="df-title">In-Game Payment</div><div class="df-txt">Pay via the refueling mechanic or direct aUEC transfer. No external accounts needed.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Org Links -->
+  <section class="section" style="background:var(--ink-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="container">
+      <div class="s-label">Find Us</div>
+      <h2 class="s-title">Our <em>Official Channels</em></h2>
+      <div class="deco-line-short"></div>
+
+      <div class="links-grid">
+        <div class="link-card" onclick="window.open('https://robertsspaceindustries.com/en/orgs/velantis','_blank')">
+          <div class="link-icon">🚀</div>
+          <div class="link-platform">Roberts Space Industries</div>
+          <div class="link-name">Velantis Group<br>[VELANTIS]</div>
+          <div class="link-desc">Our main organization page on RSI. Commerce, logistics, and trade — the backbone of everything we do.</div>
+          <div class="link-arrow">View on RSI →</div>
+        </div>
+        <div class="link-card" onclick="window.open('https://robertsspaceindustries.com/en/orgs/VLCC','_blank')">
+          <div class="link-icon">💎</div>
+          <div class="link-platform">Roberts Space Industries</div>
+          <div class="link-name">Velantis Club<br>[VLCC]</div>
+          <div class="link-desc">The private membership club. Racing nights, VIP transport, exclusive events and concierge services.</div>
+          <div class="link-arrow">View on RSI →</div>
+        </div>
+        <div class="link-card" onclick="navTo('dispatch-page')">
+          <div class="link-icon">📡</div>
+          <div class="link-platform">Velantis Group</div>
+          <div class="link-name">Dispatch<br>System</div>
+          <div class="link-desc">Request refueling, transport, or emergency assistance directly. Connected live to our Discord team.</div>
+          <div class="link-arrow">Open Dispatch →</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+<!-- ═══════════════════════════════════
+     ABOUT PAGE
+══════════════════════════════════════ -->
+<div id="page-about" class="page">
+  <section class="section" style="padding-top:6rem;">
+    <div class="container">
+      <div class="s-label">Our Story</div>
+      <h2 class="s-title">Who We Are</h2>
+      <div class="deco-line-short"></div>
+
+      <div class="who-grid">
+        <div class="who-text">
+          <p class="s-body">The Velantis Interstellar Commerce and Holding Group was founded in 2951 with one conviction: the 'verse is better when pilots look out for each other. What began as a small refueling operation in the Stanton system has grown into a full-spectrum service organization with reach across three star systems.</p>
+          <p class="s-body" style="margin-top:1.2rem;">We are not a military outfit. We are not a mining conglomerate. We are a service organization — built on speed, professionalism, and the kind of operational discipline that keeps ships flying when everything else goes wrong.</p>
+          <p class="s-body" style="margin-top:1.2rem;">Today, Velantis Group operates two entities: the main organization [VELANTIS] focused on commerce and logistics, and the private Velantis Luxury Concierge Club [VLCC] for members who expect more from the 'verse than it typically offers.</p>
+
+          <div class="fact-row">
+            <div><div class="fact-val">2951</div><div class="fact-label">Founded<br>Standard Year</div></div>
+            <div><div class="fact-val">3</div><div class="fact-label">Systems<br>Covered</div></div>
+            <div><div class="fact-val">2</div><div class="fact-label">Organizations<br>VELANTIS + VLCC</div></div>
+          </div>
+        </div>
+        <div class="who-visual">
+          <div class="who-hexgrid">
+            <div class="hex-ring"></div>
+            <div class="hex-ring"></div>
+            <div class="hex-ring"></div>
+            <div class="hex-center">
+              <svg viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+                <path d="M30 2L5 14v22c0 15 10 27 25 32 15-5 25-17 25-32V14L30 2z" fill="#080E1C" stroke="#BFA06A" stroke-width="1.5"/>
+                <path d="M19 22l11 22 11-22" stroke="#BFA06A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <circle cx="30" cy="17" r="1.2" fill="#BFA06A"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="deco-line"></div>
+
+      <div class="s-label">Our Values</div>
+      <h2 class="s-title" style="margin-bottom:2.5rem;">What Drives <em>Everything We Do</em></h2>
+
+      <div class="reasons-grid">
+        <div class="reason-card">
+          <div class="reason-icon">⚡</div>
+          <div class="reason-title">Operational Reliability</div>
+          <div class="reason-txt">We don't take assignments we can't fulfill. Every dispatch is tracked, every pilot is accountable. When you call Velantis, the job gets done.</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-icon">🎯</div>
+          <div class="reason-title">Uncompromising Professionalism</div>
+          <div class="reason-txt">Clear communication, structured operations, immersive roleplay. We represent a standard that most organizations don't bother maintaining.</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-icon">🌐</div>
+          <div class="reason-title">Reach Where Others Won't Go</div>
+          <div class="reason-txt">From the inner belt of Stanton to the lawless corridors of Pyro — Velantis operates where the need is greatest and the stakes are highest.</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-icon">🤝</div>
+          <div class="reason-title">Community First</div>
+          <div class="reason-txt">We support pilots of every experience level. Veterans and newcomers alike fly with Velantis. No prerequisites beyond commitment.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════
+     CLUB PAGE
+══════════════════════════════════════ -->
+<div id="page-club" class="page">
+  <section class="section" style="padding-top:6rem;">
+    <div class="container">
+      <div class="s-label">Private Membership</div>
+      <h2 class="s-title">The Velantis Luxury<br><em>Concierge Club</em></h2>
+      <div class="deco-line-short"></div>
+
+      <div class="club-section" style="border:1px solid var(--border);padding:4rem 3rem;margin-bottom:4rem;position:relative;overflow:hidden;">
+        <div style="position:absolute;right:-2rem;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:18rem;font-weight:700;color:rgba(191,160,106,0.03);line-height:1;pointer-events:none">VLCC</div>
+        <div class="club-grid">
+          <div class="club-badge">
+            <div class="club-badge-inner">
+              <div class="club-badge-icon">💎</div>
+            </div>
+          </div>
+          <div>
+            <p class="s-body" style="margin-bottom:1.2rem;">The Velantis Luxury Concierge Club is the private membership arm of Velantis Group — built for those who expect more than the 'verse typically offers.</p>
+            <p class="s-body" style="margin-bottom:1.2rem;">Where the main organization handles logistics and commerce, VLCC is about experience. Racing nights. Personal transport. Late-night events. A concierge that handles everything before you ask.</p>
+            <p class="s-body">This is not a combat wing. This is not a mining crew. This is the luxury tier of the Velantis network — and membership is selective.</p>
+            <div style="margin-top:2rem;">
+              <button class="btn-gold" onclick="window.open('https://robertsspaceindustries.com/en/orgs/VLCC','_blank')">View on RSI</button>
+              <button class="btn-ghost" style="margin-left:1rem;" onclick="navTo('join')">Apply for Membership</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s-label">Club Benefits</div>
+      <h2 class="s-title" style="margin-bottom:2.5rem;">What <em>Members Get</em></h2>
+
+      <div class="club-perks" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+        <div class="perk">
+          <div class="perk-icon">🏎️</div>
+          <div class="perk-name">Racing Nights</div>
+          <div class="perk-txt">Organized racing events exclusive to VLCC members. High-speed, high-stakes, fully arranged.</div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">✈️</div>
+          <div class="perk-name">Personal Transport</div>
+          <div class="perk-txt">Dedicated VIP pilots for VLCC members. Priority dispatch, premium ships.</div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">🥂</div>
+          <div class="perk-name">Exclusive Events</div>
+          <div class="perk-txt">Late-night gatherings, private org events, member-only social occasions across the 'verse.</div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">🎩</div>
+          <div class="perk-name">Concierge Service</div>
+          <div class="perk-txt">Dedicated handling for member requests. We arrange it before you have to ask twice.</div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">🌌</div>
+          <div class="perk-name">Network Access</div>
+          <div class="perk-txt">Full access to the Velantis Group logistics and refueling network at member rates.</div>
+        </div>
+        <div class="perk">
+          <div class="perk-icon">🔒</div>
+          <div class="perk-name">Selective Entry</div>
+          <div class="perk-txt">VLCC membership is curated. Not everyone who applies gets in. That's the point.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════
+     JOIN PAGE
+══════════════════════════════════════ -->
+<div id="page-join" class="page">
+  <section class="section" style="padding-top:6rem;">
+    <div class="container">
+      <div class="s-label">Recruitment</div>
+      <h2 class="s-title">How to <em>Join Velantis</em></h2>
+      <div class="deco-line-short"></div>
+      <p class="s-body" style="margin-bottom:4rem;">Joining Velantis Group or VLCC is straightforward. We don't require prior experience — only commitment to the values we operate by. Here's how it works.</p>
+
+      <div class="join-steps">
+        <div class="join-step">
+          <div class="step-num">01</div>
+          <div class="step-title">Visit RSI</div>
+          <div class="step-txt">Head to our organization page on Roberts Space Industries and hit the Join button.</div>
+          <a class="step-link" href="https://robertsspaceindustries.com/en/orgs/velantis" target="_blank">RSI — VELANTIS ↗</a>
+        </div>
+        <div class="join-step">
+          <div class="step-num">02</div>
+          <div class="step-title">Join Discord</div>
+          <div class="step-txt">Our Discord is where operations happen. Dispatch alerts, pilot coordination, events — all here.</div>
+          <a class="step-link" href="#" onclick="toast('Discord link — configure in footer','false')">Discord Server ↗</a>
+        </div>
+        <div class="join-step">
+          <div class="step-num">03</div>
+          <div class="step-title">Pick Your Role</div>
+          <div class="step-txt">Pilot, dispatcher, escort, or logistics — tell us what you want to do and we'll fit you in.</div>
+        </div>
+        <div class="join-step">
+          <div class="step-num">04</div>
+          <div class="step-title">Fly With Us</div>
+          <div class="step-txt">That's it. No lengthy trials, no arbitrary gatekeeping. Show up and do the work.</div>
+        </div>
+      </div>
+
+      <div class="deco-line"></div>
+
+      <div class="s-label">Why Velantis</div>
+      <h2 class="s-title" style="margin-bottom:2.5rem;">Reasons to <em>Fly With Us</em></h2>
+
+      <div class="reasons-grid">
+        <div class="reason-card">
+          <div class="reason-icon">🌐</div>
+          <div class="reason-title">Multi-System Coverage</div>
+          <div class="reason-txt">Most orgs stay in Stanton. We operate in Nyx and Pyro too. If you want to fly where things actually get interesting, Velantis is the organization for you.</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-icon">📡</div>
+          <div class="reason-title">Real Dispatch Infrastructure</div>
+          <div class="reason-txt">We actually have a working dispatch system with Discord integration, claim buttons, order tracking, and emergency protocols. This isn't a casual org.</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-icon">🎭</div>
+          <div class="reason-title">Immersive Roleplay</div>
+          <div class="reason-txt">If you want a corporation that actually feels like a 2956 business — proper comms, professional conduct, immersive operations — this is it.</div>
+        </div>
+        <div class="reason-card">
+          <div class="reason-icon">💎</div>
+          <div class="reason-title">Two-Tier Membership</div>
+          <div class="reason-txt">Join the main org for logistics and operations, or aim for VLCC membership if you want the luxury tier. Different paths for different pilots.</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:4rem;padding:3rem;border:1px solid var(--border);background:var(--ink-2);">
+        <div class="s-label" style="justify-content:center">Ready?</div>
+        <h3 style="font-family:var(--display);font-size:2rem;font-weight:300;color:var(--gold-hi);margin-bottom:1rem;">Your journey never ends.</h3>
+        <p style="font-size:0.9rem;color:var(--text-2);margin-bottom:2rem;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.7;">The 'verse is waiting. We'll keep you moving.</p>
+        <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <button class="btn-gold" onclick="window.open('https://robertsspaceindustries.com/en/orgs/velantis','_blank')">Join VELANTIS on RSI</button>
+          <button class="btn-ghost" onclick="window.open('https://robertsspaceindustries.com/en/orgs/VLCC','_blank')">Join VLCC on RSI</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════
+     DISPATCH PAGE
+══════════════════════════════════════ -->
+<div id="page-dispatch-page" class="page">
+  <div class="dispatch-page-inner">
+    <div class="s-label">Velantis Dispatch</div>
+    <h2 class="s-title">Request a Service</h2>
+    <div class="deco-line-short"></div>
+    <p style="font-size:0.84rem;color:var(--text-2);margin-bottom:2.5rem;line-height:1.7;">Select one or more services. You can combine — e.g. Quantum + Hydrogen Refuel at once.</p>
+
+    <div class="service-grid">
+      <div class="svc-pick" onclick="toggleSvc(this,'Quantum Refuel')"><div class="ck">✓</div><div class="svc-pick-icon">⛽</div><div class="svc-pick-name">Quantum Refuel</div><div class="svc-pick-desc">Out of quantum fuel in deep space</div></div>
+      <div class="svc-pick" onclick="toggleSvc(this,'Hydrogen Refuel')"><div class="ck">✓</div><div class="svc-pick-icon">🔋</div><div class="svc-pick-name">Hydrogen Refuel</div><div class="svc-pick-desc">Standard hydrogen at your location</div></div>
+      <div class="svc-pick" onclick="toggleSvc(this,'Taxi / Shuttle')"><div class="ck">✓</div><div class="svc-pick-icon">🚀</div><div class="svc-pick-name">Taxi / Shuttle</div><div class="svc-pick-desc">Transport between stations or cities</div></div>
+      <div class="svc-pick" onclick="toggleSvc(this,'Deep Space Transport')"><div class="ck">✓</div><div class="svc-pick-icon">🌌</div><div class="svc-pick-name">Deep Space Run</div><div class="svc-pick-desc">Long-range transport with escort option</div></div>
+      <div class="svc-pick" onclick="toggleSvc(this,'Fleet Support')"><div class="ck">✓</div><div class="svc-pick-icon">🛸</div><div class="svc-pick-name">Fleet Support</div><div class="svc-pick-desc">Mobile supply for larger groups</div></div>
+      <div class="svc-pick" onclick="toggleSvc(this,'Convoy Escort')"><div class="ck">✓</div><div class="svc-pick-icon">🛡️</div><div class="svc-pick-name">Convoy Escort</div><div class="svc-pick-desc">Security through high-risk systems</div></div>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Urgency Level</label>
+      <div class="urgency-row">
+        <button class="urg-btn u-low" onclick="setUrg(this,'low')">🟢 Low</button>
+        <button class="urg-btn" onclick="setUrg(this,'mid')">🟡 Standard</button>
+        <button class="urg-btn" onclick="setUrg(this,'high')">🔴 High Priority</button>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <div class="form-row">
+      <div class="form-group"><label class="field-label">In-Game Handle</label><input type="text" id="d-handle" placeholder="YourHandle" autocomplete="off"></div>
+      <div class="form-group"><label class="field-label">Current System</label>
+        <select id="d-system"><option value="">— Select System —</option><option>Stanton</option><option>Nyx</option><option>Pyro</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="field-label">Exact Location / Coordinates</label><input type="text" id="d-location" placeholder="e.g. Near Port Tressler, ~80km out — or paste coordinates"></div>
+    <div class="form-group"><label class="field-label">Destination (if applicable)</label><input type="text" id="d-destination" placeholder="e.g. Lorville, Hurston — leave blank if not applicable"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="field-label">Preferred Date</label><input type="date" id="d-date"></div>
+      <div class="form-group"><label class="field-label">Preferred Time (UTC)</label><input type="time" id="d-time"></div>
+    </div>
+    <div class="form-group"><label class="field-label">Additional Notes</label><textarea id="d-notes" placeholder="Crew size, special requirements, threat level..."></textarea></div>
+    <button class="submit-btn" id="d-submit" onclick="submitDispatch()">Submit Dispatch Request →</button>
+
+    <hr class="rule" style="margin-top:3rem;">
+
+    <div class="s-label" style="margin-top:2rem;">Emergency</div>
+    <h3 style="font-family:var(--display);font-size:1.5rem;color:var(--red);font-weight:600;margin-bottom:0.5rem;">⚠ Emergency Dispatch</h3>
+    <p style="font-size:0.82rem;color:var(--text-2);margin-bottom:1.5rem;line-height:1.6;">Pings the entire team instantly. Use only for genuine emergencies.</p>
+
+    <div class="em-grid">
+      <div class="em-card" onclick="selectEm(this,'MAYDAY — Out of Fuel')"><div class="ck">✓</div><div class="em-badge">Mayday</div><div class="em-title">Out of Fuel</div><div class="em-txt">No fuel remaining, cannot move.</div></div>
+      <div class="em-card" onclick="selectEm(this,'MAYDAY — Rescue Required')"><div class="ck">✓</div><div class="em-badge">Rescue</div><div class="em-title">Crew Rescue</div><div class="em-txt">Immediate evacuation needed.</div></div>
+      <div class="em-card" onclick="selectEm(this,'REPAIR CREW Required')"><div class="ck">✓</div><div class="em-badge">Repair</div><div class="em-title">Repair Crew</div><div class="em-txt">Ship damaged, need repair on-site.</div></div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group"><label class="field-label">In-Game Handle</label><input type="text" id="e-handle" placeholder="YourHandle"></div>
+      <div class="form-group"><label class="field-label">Current System</label>
+        <select id="e-system"><option value="">— Select System —</option><option>Stanton</option><option>Nyx</option><option>Pyro</option></select>
+      </div>
+    </div>
+    <div class="form-group"><label class="field-label">Exact Location</label><input type="text" id="e-location" placeholder="Be as specific as possible — coordinates, nearby POI..."></div>
+    <div class="form-group"><label class="field-label">Status / Threats</label><textarea id="e-notes" placeholder="Hostile activity? Crew count? Ship state?"></textarea></div>
+    <button class="submit-btn em" id="e-submit" onclick="submitEmergency()">🚨 Send Emergency Signal →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     STATUS PAGE
+══════════════════════════════════════ -->
+<div id="page-status" class="page">
+  <section class="section" style="padding-top:6rem;">
+    <div class="container-narrow">
+      <div class="s-label">Operations</div>
+      <h2 class="s-title">System <em>Status</em></h2>
+      <div class="deco-line-short"></div>
+
+      <div class="status-grid">
+        <div class="status-card" style="grid-column:1/-1;">
+          <div class="status-card-label">Dispatch Center</div>
+          <div class="status-card-val">
+            <span class="sdot chk" id="sdot"></span>
+            <span id="stxt">Checking connection…</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">Stanton System</div>
+          <div class="status-card-val"><span class="sdot on"></span>Operational</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">Nyx System</div>
+          <div class="status-card-val"><span class="sdot on"></span>Operational</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">Pyro System</div>
+          <div class="status-card-val"><span class="sdot on" style="background:var(--gold)"></span>Limited Availability</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">Emergency Response</div>
+          <div class="status-card-val"><span class="sdot on"></span>24/7 Active</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">VLCC Concierge</div>
+          <div class="status-card-val"><span class="sdot on"></span>Members Online</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">Payment Methods</div>
+          <div class="status-card-val">aUEC Transfer · In-game Refueling Mechanic</div>
+        </div>
+        <div class="status-card">
+          <div class="status-card-label">Last Checked</div>
+          <div class="status-card-val" id="slast" style="font-family:var(--mono);font-size:0.75rem;color:var(--text-2)">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Velantis Group</div>
+      <div class="footer-brand-tag">[VELANTIS] · Interstellar Commerce &amp; Holding · Est. 2951</div>
+      <p class="footer-brand-txt">Behind every major trade route, there is one name. Velantis Interstellar Commerce and Holding Group — commerce, logistics and prestige, done right.</p>
+      <p style="font-family:var(--display);font-style:italic;color:var(--gold-lo);font-size:0.9rem;margin-top:1rem;">"Your journey never ends."</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="navTo('home')">Home</a></li>
+        <li><a href="#" onclick="navTo('about')">About Us</a></li>
+        <li><a href="#" onclick="navTo('club')">The Club (VLCC)</a></li>
+        <li><a href="#" onclick="navTo('join')">Join Us</a></li>
+        <li><a href="#" onclick="navTo('dispatch-page')">Dispatch System</a></li>
+        <li><a href="#" onclick="navTo('status')">Status</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Organizations</div>
+      <ul class="footer-links">
+        <li><a href="https://robertsspaceindustries.com/en/orgs/velantis" target="_blank">VELANTIS on RSI ↗</a></li>
+        <li><a href="https://robertsspaceindustries.com/en/orgs/VLCC" target="_blank">VLCC on RSI ↗</a></li>
+      </ul>
+      <div class="footer-col-title" style="margin-top:1.5rem;">Coverage</div>
+      <ul class="footer-links">
+        <li><a>Stanton System</a></li>
+        <li><a>Nyx System</a></li>
+        <li><a>Pyro System</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <ul class="footer-links">
+        <li><a href="#" onclick="navTo('dispatch-page')">Quantum Refuel</a></li>
+        <li><a href="#" onclick="navTo('dispatch-page')">Hydrogen Refuel</a></li>
+        <li><a href="#" onclick="navTo('dispatch-page')">Taxi &amp; Shuttle</a></li>
+        <li><a href="#" onclick="navTo('dispatch-page')">Deep Space Runs</a></li>
+        <li><a href="#" onclick="navTo('dispatch-page')">Fleet Support</a></li>
+        <li><a href="#" onclick="navTo('dispatch-page')">Convoy Escort</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2956 Velantis Interstellar Commerce &amp; Holding Group · All rights reserved</span>
+    <span style="font-size:0.5rem;letter-spacing:0.15em;">VELANTIS · VLCC · Star Citizen Fan Organization</span>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+// ════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════
+const BOT_URL    = "https://finally-driller-garbage.ngrok-free.dev";
+const BOT_SECRET = "change_this_to_a_random_string";
+// ════════════════════════════════════════
+
+// State
+let selSvcs = new Set();
+let urgency = 'low';
+let selEm   = null;
+
+// ── Canvas star background ────────────
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  function initStars(){
+    stars = [];
+    const count = Math.floor((canvas.width * canvas.height) / 8000);
+    for(let i=0;i<count;i++){
+      stars.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        r: Math.random()*1.2+0.2,
+        op: Math.random()*0.5+0.1,
+        speed: Math.random()*0.3+0.05,
+        dir: Math.random()*Math.PI*2,
+        twinkle: Math.random()*Math.PI*2,
+        twinkleSpeed: 0.005+Math.random()*0.02,
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+      s.twinkle += s.twinkleSpeed;
+      const op = s.op * (0.5 + 0.5*Math.sin(s.twinkle));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(220,210,190,${op})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  resize(); initStars(); draw();
+  window.addEventListener('resize', ()=>{ resize(); initStars(); });
+})();
+
+// ── Header scroll ────────────────────
+window.addEventListener('scroll', ()=>{
+  document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ── Navigation ────────────────────────
+function navTo(name, e) {
+  if(e) e.preventDefault();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.header-nav a').forEach(a=>a.classList.remove('active'));
+  const pg = document.getElementById('page-'+name);
+  if(pg){ pg.classList.add('active'); window.scrollTo(0,0); }
+  const nav = document.getElementById('nav-'+name);
+  if(nav) nav.classList.add('active');
+  if(name==='status') checkBotStatus();
+  return false;
+}
+
+function toggleMobile(){
+  const m = document.getElementById('mobile-nav');
+  m.style.display = m.style.display==='none' ? 'block' : 'none';
+}
+
+// ── Multi-select services ─────────────
+function toggleSvc(el, name){
+  if(el.classList.contains('sel')){ el.classList.remove('sel'); selSvcs.delete(name); }
+  else { el.classList.add('sel'); selSvcs.add(name); }
+}
+
+// ── Emergency single select ───────────
+function selectEm(el, name){
+  document.querySelectorAll('.em-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel'); selEm = name;
+}
+
+// ── Urgency ───────────────────────────
+function setUrg(el, lvl){
+  document.querySelectorAll('.urg-btn').forEach(b=>b.classList.remove('u-low','u-mid','u-high'));
+  urgency = lvl; el.classList.add('u-'+lvl);
+}
+
+// ── Toast ─────────────────────────────
+function toast(msg, isErr){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show'+(isErr?' err':'');
+  clearTimeout(window._t);
+  window._t = setTimeout(()=>el.className='', 4000);
+}
+
+// ── Confirm overlay ───────────────────
+function showConfirm(isEm, ref){
+  document.getElementById('ci').textContent = isEm ? '🚨' : '📡';
+  document.getElementById('ct').textContent = isEm ? 'Emergency Signal Sent' : 'Dispatch Confirmed';
+  document.getElementById('cx').textContent = isEm
+    ? 'Your emergency signal has been received. The entire team has been alerted. Help is on the way — maintain your position.'
+    : 'Your request has been received by our dispatch center. A pilot will be assigned shortly. Stand by on your current position.';
+  document.getElementById('cr').textContent = 'Reference: ' + ref;
+  document.getElementById('confirm-ov').classList.add('show');
+}
+function closeConfirm(){
+  document.getElementById('confirm-ov').classList.remove('show');
+}
+document.getElementById('confirm-ov').addEventListener('click', function(e){
+  if(e.target===this) closeConfirm();
+});
+
+// ── API ───────────────────────────────
+async function post(path, body){
+  const r = await fetch(BOT_URL+path, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Velantis-Secret':BOT_SECRET},
+    body:JSON.stringify(body)
+  });
+  if(!r.ok) throw new Error(await r.text());
+}
+
+// ── Submit Dispatch ───────────────────
+async function submitDispatch(){
+  const handle   = document.getElementById('d-handle').value.trim();
+  const system   = document.getElementById('d-system').value;
+  const location = document.getElementById('d-location').value.trim();
+  if(!handle)          { toast('Enter your in-game handle', true); return; }
+  if(selSvcs.size===0) { toast('Select at least one service', true); return; }
+  if(!system)          { toast('Select your current system', true); return; }
+  if(!location)        { toast('Enter your location', true); return; }
+
+  const btn = document.getElementById('d-submit');
+  btn.disabled=true; btn.textContent='Sending…';
+  const date = document.getElementById('d-date').value;
+  const time = document.getElementById('d-time').value;
+  const scheduled = (date||time) ? [date,time].filter(Boolean).join(' ')+' UTC' : null;
+  const ref = 'VG-'+Date.now().toString(36).toUpperCase();
+  try {
+    await post('/order',{type:'dispatch',handle,urgency,service:[...selSvcs].join(', '),system,location,destination:document.getElementById('d-destination').value.trim(),scheduled,notes:document.getElementById('d-notes').value.trim(),ref});
+    showConfirm(false,ref);
+    ['d-handle','d-location','d-destination','d-date','d-time','d-notes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('d-system').value='';
+    document.querySelectorAll('.svc-pick').forEach(c=>c.classList.remove('sel'));
+    selSvcs.clear();
+  } catch(e) { toast('Could not reach dispatch — check bot is running', true); }
+  finally { btn.disabled=false; btn.textContent='Submit Dispatch Request →'; }
+}
+
+// ── Submit Emergency ──────────────────
+async function submitEmergency(){
+  const handle   = document.getElementById('e-handle').value.trim();
+  const system   = document.getElementById('e-system').value;
+  const location = document.getElementById('e-location').value.trim();
+  if(!handle)   { toast('Enter your in-game handle', true); return; }
+  if(!selEm)    { toast('Select emergency type', true); return; }
+  if(!system)   { toast('Select your system', true); return; }
+  if(!location) { toast('Enter your location', true); return; }
+  const btn = document.getElementById('e-submit');
+  btn.disabled=true; btn.textContent='Sending…';
+  const ref = 'VGE-'+Date.now().toString(36).toUpperCase();
+  try {
+    await post('/order',{type:'emergency',emergency_type:selEm,handle,system,location,notes:document.getElementById('e-notes').value.trim(),ref});
+    showConfirm(true,ref);
+    ['e-handle','e-location','e-notes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('e-system').value='';
+    document.querySelectorAll('.em-card').forEach(c=>c.classList.remove('sel'));
+    selEm=null;
+  } catch(e) { toast('Could not reach dispatch — check bot is running', true); }
+  finally { btn.disabled=false; btn.textContent='🚨 Send Emergency Signal →'; }
+}
+
+// ── Bot Status Check ──────────────────
+async function checkBotStatus(){
+  const dot  = document.getElementById('sdot');
+  const txt  = document.getElementById('stxt');
+  const last = document.getElementById('slast');
+  if(!dot) return;
+  dot.className='sdot chk'; txt.textContent='Checking connection…'; txt.style.color='';
+  try {
+    const r = await fetch(BOT_URL+'/health',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Velantis-Secret':BOT_SECRET},
+      body:'{}',
+      signal:AbortSignal.timeout(5000)
+    });
+    if(r.ok){
+      dot.className='sdot on';
+      txt.textContent='Online — accepting requests';
+      txt.style.color='var(--green)';
+    } else throw new Error();
+  } catch {
+    dot.className='sdot off';
+    txt.textContent='Offline — dispatch unavailable';
+    txt.style.color='var(--red)';
+  }
+  last.textContent = new Date().toUTCString();
+}
+
+checkBotStatus();
+</script>
+</body>
+</html>
